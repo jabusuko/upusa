@@ -652,8 +652,7 @@ local Section = Auto:Section({
     Title = "Teleport Feature",
 })
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- Players and player already declared at top, reuse them
 
 local teleportLocations = {
     ["Fisherman Island"] = CFrame.new(77, 9, 2706),
@@ -750,11 +749,10 @@ local TeleportToggle = Auto:Toggle({
 
 Auto:Divider()
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- Reuse existing Players and player variables
 
 local savedCFrame = nil
-local freezeLoop = nil
+local freezeLoop2 = nil  -- Renamed to avoid conflict
 local teleportEnabled = false
 
 local function saveCurrentPosition()
@@ -768,10 +766,10 @@ local function saveCurrentPosition()
     return false
 end
 
-local function startFreeze()
-    if freezeLoop then return end
+local function startFreeze2()
+    if freezeLoop2 then return end
     
-    freezeLoop = game:GetService("RunService").Heartbeat:Connect(function()
+    freezeLoop2 = game:GetService("RunService").Heartbeat:Connect(function()
         if teleportEnabled and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
             
@@ -782,10 +780,10 @@ local function startFreeze()
     end)
 end
 
-local function stopFreeze()
-    if freezeLoop then
-        freezeLoop:Disconnect()
-        freezeLoop = nil
+local function stopFreeze2()
+    if freezeLoop2 then
+        freezeLoop2:Disconnect()
+        freezeLoop2 = nil
     end
 end
 
@@ -812,10 +810,10 @@ local TeleportToggles = Auto:Toggle({
                 local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
                 rootPart.CFrame = savedCFrame
                 task.wait(0.1)
-                startFreeze()
+                startFreeze2()
             end
         else
-            stopFreeze()
+            stopFreeze2()
         end
     end
 })
@@ -1165,8 +1163,7 @@ local section = Teleport:Section({
     Title = "Teleport To Players",
 })
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- Reuse existing Players and player variables
 
 local selectedPlayer = ""
 
@@ -1221,8 +1218,7 @@ local Section = Teleport:Section({
     Title = "Teleport To Island Locations",
 })
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- Reuse existing Players and player variables
 
 local teleportLocations = {
     ["Fisherman Island"] = CFrame.new(77, 9, 2706),
