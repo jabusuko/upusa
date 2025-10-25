@@ -1,148 +1,239 @@
-local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+-- Safe WindUI loading with error handling
+local WindUI
+local success, err = pcall(function()
+    WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+end)
 
-WindUI:AddTheme({
-    Name = "Fyy Exploit", 
-    
-    Accent = WindUI:Gradient({                                                  
-        ["0"] = { Color = Color3.fromHex("#1f1f23"), Transparency = 0 },        
-        ["100"]   = { Color = Color3.fromHex("#18181b"), Transparency = 0 },    
-    }, {                                                                        
-        Rotation = 0,                                                           
-    }),                                                                         
-    Dialog = Color3.fromHex("#161616"),
-    Outline = Color3.fromHex("#FFFFFF"),
-    Text = Color3.fromHex("#FFFFFF"),
-    Placeholder = Color3.fromHex("#7a7a7a"),
-    Background = Color3.fromHex("#101010"),
-    Button = Color3.fromHex("#52525b"),
-    Icon = Color3.fromHex("#a1a1aa")
-})
-local Window = WindUI:CreateWindow({
-    Title = "FyyExploit",
-    Icon = "slack", 
-    Author = "Fyy X Fish IT",
-    Folder = "FyyConfig",
-    
-    Size = UDim2.fromOffset(530, 300),
-    MinSize = Vector2.new(320, 300),
-    MaxSize = Vector2.new(850, 560),
-    Transparent = true,
-    Theme = "Dark",
-    Resizable = true,
-    SideBarWidth = 150,
-    BackgroundImageTransparency = 0.42,
-    HideSearchBar = false,
-    ScrollBarEnabled = false,
-})
-
-Window:SetToggleKey(Enum.KeyCode.G)
-
-WindUI:Notify({
-    Title = "FyyLoader",
-    Content = "Press G To Open/Close Menu!",
-    Duration = 4, 
-    Icon = "slack",
-})
----------------- TAB ---------------
-
-local Info = Window:Tab({
-    Title = "Info",
-    Icon = "info", 
-})
-
-local Player = Window:Tab({
-    Title = "Player",
-    Icon = "user", 
-})
-
-local Auto = Window:Tab({
-    Title = "Main",
-    Icon = "play", 
-})
-
-local Shop = Window:Tab({
-    Title = "Shop",
-    Icon = "shopping-cart", 
-})
-
-local Teleport = Window:Tab({
-    Title = "Teleport",
-    Icon = "map-pin",
-})
-
-local Quest = Window:Tab({
-    Title = "Quest",
-    Icon = "loader", 
-})
-
-local Setting = Window:Tab({
-    Title = "Settings",
-    Icon = "settings", 
-})
-
-local Enchant = Window:Tab({
-	Title = "Enchants",
-	Icon = "star",
-})
-
-local Discord = Window:Tab({
-    Title = "Webhook",
-    Icon = "megaphone", 
-})
-
-local Config = Window:Tab({
-	Title = "Config",
-	Icon = "folder",
-})
-
------------ END OF TAB -------------
-local InfoSection = Info:Section({
-    Title = "Have Problem / Need Help? Join Server Now",
-    Box = true,
-    TextTransparency = 0.05,
-    TextXAlignment = "Center",
-    TextSize = 17,
-    Opened = true,
-})
-
-Info:Select()
-
-local function CopyLink(link, title, notifTitle, notifContent)
-    Info:Button({
-        Title = title or "Copy Link",
-        Desc = "Click to copy link",
-        Callback = function()
-            if setclipboard then
-                setclipboard(link)
-            end
-            WindUI:Notify({
-                Title = notifTitle or "Copied!",
-                Content = notifContent or ("Link '" .. link .. "' copied to clipboard"),
-                Duration = 3,
-                Icon = "bell",
-            })
-        end
-    })
+if not success or not WindUI then
+    print("Error loading WindUI:", err)
+    return
 end
 
-CopyLink(
-    "https://discord.gg/77nEeYeFRp",
-    "Copy Discord Link",
-    "Discord Copied!",
-    "Link copied to clipboard"
-)
+-- Safe theme creation
+local themeSuccess, themeErr = pcall(function()
+    WindUI:AddTheme({
+        Name = "Fyy Exploit", 
+        
+        Accent = WindUI:Gradient({                                                  
+            ["0"] = { Color = Color3.fromHex("#1f1f23"), Transparency = 0 },        
+            ["100"]   = { Color = Color3.fromHex("#18181b"), Transparency = 0 },    
+        }, {                                                                        
+            Rotation = 0,                                                           
+        }),                                                                         
+        Dialog = Color3.fromHex("#161616"),
+        Outline = Color3.fromHex("#FFFFFF"),
+        Text = Color3.fromHex("#FFFFFF"),
+        Placeholder = Color3.fromHex("#7a7a7a"),
+        Background = Color3.fromHex("#101010"),
+        Button = Color3.fromHex("#52525b"),
+        Icon = Color3.fromHex("#a1a1aa")
+    })
+end)
+
+if not themeSuccess then
+    print("Error creating theme:", themeErr)
+    return
+end
+-- Safe Window creation
+local Window
+local windowSuccess, windowErr = pcall(function()
+    Window = WindUI:CreateWindow({
+        Title = "FyyExploit",
+        Icon = "slack", 
+        Author = "Fyy X Fish IT",
+        Folder = "FyyConfig",
+        
+        Size = UDim2.fromOffset(530, 300),
+        MinSize = Vector2.new(320, 300),
+        MaxSize = Vector2.new(850, 560),
+        Transparent = true,
+        Theme = "Dark",
+        Resizable = true,
+        SideBarWidth = 150,
+        BackgroundImageTransparency = 0.42,
+        HideSearchBar = false,
+        ScrollBarEnabled = false,
+    })
+end)
+
+if not windowSuccess or not Window then
+    print("Error creating window:", windowErr)
+    return
+end
+
+-- Safe toggle key setting
+local toggleSuccess, toggleErr = pcall(function()
+    Window:SetToggleKey(Enum.KeyCode.G)
+end)
+
+if not toggleSuccess then
+    print("Error setting toggle key:", toggleErr)
+end
+
+-- Safe notification
+local notifySuccess, notifyErr = pcall(function()
+    WindUI:Notify({
+        Title = "FyyLoader",
+        Content = "Press G To Open/Close Menu!",
+        Duration = 4, 
+        Icon = "slack",
+    })
+end)
+
+if not notifySuccess then
+    print("Error showing notification:", notifyErr)
+end
+---------------- TAB ---------------
+
+-- Safe tab creation with error handling
+local Info, Player, Auto, Shop, Teleport, Quest, Setting, Enchant, Discord, Config
+
+local function createTab(name, icon)
+    local success, tab = pcall(function()
+        return Window:Tab({
+            Title = name,
+            Icon = icon
+        })
+    end)
+    
+    if success and tab then
+        return tab
+    else
+        print("Error creating tab:", name, tab)
+        return nil
+    end
+end
+
+Info = createTab("Info", "info")
+Player = createTab("Player", "user")
+Auto = createTab("Main", "play")
+Shop = createTab("Shop", "shopping-cart")
+Teleport = createTab("Teleport", "map-pin")
+Quest = createTab("Quest", "loader")
+Setting = createTab("Settings", "settings")
+Enchant = createTab("Enchants", "star")
+Discord = createTab("Webhook", "megaphone")
+Config = createTab("Config", "folder")
+
+-- Check if all tabs were created successfully
+if not Info or not Player or not Auto or not Shop or not Teleport or not Quest or not Setting or not Enchant or not Discord or not Config then
+    print("Error: Some tabs failed to create. Script may not work properly.")
+    return
+end
+
+----------- END OF TAB -------------
+
+-- Safe section creation
+local InfoSection
+local sectionSuccess, sectionErr = pcall(function()
+    InfoSection = Info:Section({
+        Title = "Have Problem / Need Help? Join Server Now",
+        Box = true,
+        TextTransparency = 0.05,
+        TextXAlignment = "Center",
+        TextSize = 17,
+        Opened = true,
+    })
+end)
+
+if not sectionSuccess then
+    print("Error creating InfoSection:", sectionErr)
+    return
+end
+
+-- Safe Info:Select()
+local selectSuccess, selectErr = pcall(function()
+    Info:Select()
+end)
+
+if not selectSuccess then
+    print("Error selecting Info tab:", selectErr)
+end
+
+local function CopyLink(link, title, notifTitle, notifContent)
+    local buttonSuccess, buttonErr = pcall(function()
+        Info:Button({
+            Title = title or "Copy Link",
+            Desc = "Click to copy link",
+            Callback = function()
+                local copySuccess, copyErr = pcall(function()
+                    if setclipboard then
+                        setclipboard(link)
+                    end
+                end)
+                
+                if not copySuccess then
+                    print("Error copying to clipboard:", copyErr)
+                end
+                
+                local notifySuccess, notifyErr = pcall(function()
+                    WindUI:Notify({
+                        Title = notifTitle or "Copied!",
+                        Content = notifContent or ("Link '" .. link .. "' copied to clipboard"),
+                        Duration = 3,
+                        Icon = "bell",
+                    })
+                end)
+                
+                if not notifySuccess then
+                    print("Error showing notification:", notifyErr)
+                end
+            end
+        })
+    end)
+    
+    if not buttonSuccess then
+        print("Error creating CopyLink button:", buttonErr)
+    end
+end
+
+-- Safe CopyLink call
+local copyLinkSuccess, copyLinkErr = pcall(function()
+    CopyLink(
+        "https://discord.gg/77nEeYeFRp",
+        "Copy Discord Link",
+        "Discord Copied!",
+        "Link copied to clipboard"
+    )
+end)
+
+if not copyLinkSuccess then
+    print("Error calling CopyLink:", copyLinkErr)
+end
 
 ---------------------------------------------------------------
 --// PLAYER TAB
-local PlayerSection = Player:Section({ Title = "Player Feature" })
+local PlayerSection
+local playerSectionSuccess, playerSectionErr = pcall(function()
+    PlayerSection = Player:Section({ Title = "Player Feature" })
+end)
 
-local WalkSpeedInput = Player:Input({
-    Title = "Set WalkSpeed",
-    Placeholder = "Enter number (e.g. 50)",
-    Callback = function(value)
-        WalkSpeedInput.Value = tonumber(value) or 16
-    end
-})
+if not playerSectionSuccess then
+    print("Error creating PlayerSection:", playerSectionErr)
+    return
+end
+
+local WalkSpeedInput
+local walkSpeedInputSuccess, walkSpeedInputErr = pcall(function()
+    WalkSpeedInput = Player:Input({
+        Title = "Set WalkSpeed",
+        Placeholder = "Enter number (e.g. 50)",
+        Callback = function(value)
+            local callbackSuccess, callbackErr = pcall(function()
+                WalkSpeedInput.Value = tonumber(value) or 16
+            end)
+            
+            if not callbackSuccess then
+                print("Error in WalkSpeedInput callback:", callbackErr)
+            end
+        end
+    })
+end)
+
+if not walkSpeedInputSuccess then
+    print("Error creating WalkSpeedInput:", walkSpeedInputErr)
+    return
+end
 
 local WalkSpeedToggle = Player:Toggle({
     Title = "WalkSpeed",
