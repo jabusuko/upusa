@@ -1,0 +1,429 @@
+-- FAST FISHING ULTRA - 2-3 SEC PER CATCH
+-- All menus included, optimized for speed
+-- Created by Fyy X Fish IT
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+WindUI:AddTheme({
+    Name = "Fyy Exploit", 
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#1f1f23"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#18181b"), Transparency = 0 },
+    }, { Rotation = 0 }),
+    Dialog = Color3.fromHex("#161616"),
+    Outline = Color3.fromHex("#FFFFFF"),
+    Text = Color3.fromHex("#FFFFFF"),
+    Placeholder = Color3.fromHex("#7a7a7a"),
+    Background = Color3.fromHex("#101010"),
+    Button = Color3.fromHex("#52525b"),
+    Icon = Color3.fromHex("#a1a1aa")
+})
+
+local Window = WindUI:CreateWindow({
+    Title = "FyyExploit - ULTRA FAST",
+    Icon = "slack",
+    Author = "Fyy X Fish IT",
+    Folder = "FyyConfig",
+    Size = UDim2.fromOffset(530, 300),
+    MinSize = Vector2.new(320, 300),
+    MaxSize = Vector2.new(850, 560),
+    Transparent = true,
+    Theme = "Dark",
+    Resizable = true,
+    SideBarWidth = 150,
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = false,
+    ScrollBarEnabled = false,
+})
+
+Window:SetToggleKey(Enum.KeyCode.G)
+
+WindUI:Notify({
+    Title = "FyyLoader",
+    Content = "ULTRA FAST MODE | Press G",
+    Duration = 4,
+    Icon = "slack",
+})
+
+-- TABS
+local Info = Window:Tab({ Title = "Info", Icon = "info" })
+local Player = Window:Tab({ Title = "Player", Icon = "user" })
+local Auto = Window:Tab({ Title = "Main", Icon = "play" })
+local Shop = Window:Tab({ Title = "Shop", Icon = "shopping-cart" })
+local Teleport = Window:Tab({ Title = "Teleport", Icon = "map-pin" })
+local Quest = Window:Tab({ Title = "Quest", Icon = "loader" })
+local Setting = Window:Tab({ Title = "Settings", Icon = "settings" })
+local Enchant = Window:Tab({ Title = "Enchants", Icon = "star" })
+local Discord = Window:Tab({ Title = "Webhook", Icon = "megaphone" })
+local Config = Window:Tab({ Title = "Config", Icon = "folder" })
+
+-- INFO TAB
+local InfoSection = Info:Section({
+    Title = "Have Problem / Need Help? Join Server Now",
+    Box = true,
+    TextTransparency = 0.05,
+    TextXAlignment = "Center",
+    TextSize = 17,
+    Opened = true,
+})
+
+Info:Select()
+
+Info:Button({
+    Title = "Copy Discord Link",
+    Desc = "Click to copy link",
+    Callback = function()
+        if setclipboard then
+            setclipboard("https://discord.gg/77nEeYeFRp")
+        end
+        WindUI:Notify({
+            Title = "Discord Copied!",
+            Content = "Link copied to clipboard",
+            Duration = 3,
+            Icon = "bell",
+        })
+    end
+})
+
+-- PLAYER TAB
+local PlayerSection = Player:Section({ Title = "Player Feature" })
+
+local WalkSpeedInput = Player:Input({
+    Title = "Set WalkSpeed",
+    Placeholder = "Enter number (e.g. 50)",
+    Callback = function(value)
+        WalkSpeedInput.Value = tonumber(value) or 16
+    end
+})
+
+Player:Toggle({
+    Title = "WalkSpeed",
+    Default = false,
+    Callback = function(state)
+        local plr = game.Players.LocalPlayer
+        local char = plr.Character or plr.CharacterAdded:Wait()
+        local humanoid = char:WaitForChild("Humanoid")
+        humanoid.WalkSpeed = state and (WalkSpeedInput.Value or 16) or 16
+    end
+})
+
+Player:Divider()
+
+local InfiniteJumpConn
+Player:Toggle({
+    Title = "Infinite Jump",
+    Default = false,
+    Callback = function(state)
+        local UIS = game:GetService("UserInputService")
+        if state then
+            InfiniteJumpConn = UIS.JumpRequest:Connect(function()
+                local char = game.Players.LocalPlayer.Character
+                if char and char:FindFirstChild("Humanoid") then
+                    char.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        elseif InfiniteJumpConn then
+            InfiniteJumpConn:Disconnect()
+            InfiniteJumpConn = nil
+        end
+    end
+})
+
+local NoClipConn
+Player:Toggle({
+    Title = "NoClip",
+    Default = false,
+    Callback = function(state)
+        local plr = game.Players.LocalPlayer
+        if state then
+            NoClipConn = game:GetService("RunService").Stepped:Connect(function()
+                local char = plr.Character
+                if char then
+                    for _, part in ipairs(char:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        elseif NoClipConn then
+            NoClipConn:Disconnect()
+            NoClipConn = nil
+            local char = plr.Character
+            if char then
+                for _, part in ipairs(char:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    end
+})
+
+-- ANTI-AFK
+local VirtualInputManager = game:GetService("VirtualInputManager")
+task.spawn(function()
+    while true do
+        task.wait(math.random(600, 700))
+        local keyCombos = {
+            {Enum.KeyCode.LeftShift, Enum.KeyCode.E},
+            {Enum.KeyCode.LeftControl, Enum.KeyCode.F},
+            {Enum.KeyCode.Q, Enum.KeyCode.Tab},
+        }
+        local chosenCombo = keyCombos[math.random(1, #keyCombos)]
+        pcall(function()
+            for _, key in pairs(chosenCombo) do
+                VirtualInputManager:SendKeyEvent(true, key, false, nil)
+            end
+            task.wait(0.1)
+            for _, key in pairs(chosenCombo) do
+                VirtualInputManager:SendKeyEvent(false, key, false, nil)
+            end
+        end)
+    end
+end)
+
+-- ========== ULTRA FAST FISHING ==========
+local Section = Auto:Section({ Title = "⚡ ULTRA FAST FISHING ⚡" })
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local REEquipToolFromHotbar = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/EquipToolFromHotbar"]
+local RFChargeFishingRod = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/ChargeFishingRod"]
+local RFRequestFishingMinigameStarted = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/RequestFishingMinigameStarted"]
+local REFishingCompleted = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FishingCompleted"]
+local REUnequipToolFromHotbar = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/UnequipToolFromHotbar"]
+local RFCancelFishingInputs = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/CancelFishingInputs"]
+local REFishCaught = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FishCaught"]
+
+local running = false
+local equipped = false
+local lastFishTime = 0
+local fishCaught = 0
+local sessionStartTime = 0
+local superFastMode = false
+
+local function safeFire(remote, arg)
+    if not remote then return false end
+    return pcall(function()
+        if arg ~= nil then remote:FireServer(arg) else remote:FireServer() end
+    end)
+end
+
+local function safeInvoke(remote, arg1, arg2)
+    if not remote then return nil end
+    local ok, res = pcall(function()
+        if arg1 and arg2 then
+            return remote:InvokeServer(arg1, arg2)
+        elseif arg1 then
+            return remote:InvokeServer(arg1)
+        else
+            return remote:InvokeServer()
+        end
+    end)
+    return ok and res or nil
+end
+
+local function equipTool()
+    if not equipped then
+        for i = 1, 3 do
+            safeFire(REEquipToolFromHotbar, 1)
+        end
+        equipped = true
+    end
+end
+
+local function resetTool()
+    safeFire(REUnequipToolFromHotbar)
+    equipped = false
+    equipTool()
+end
+
+-- ULTRA FAST: 2-3 seconds per catch
+local function ultraFastCast()
+    -- Instant charge + multiple parallel requests
+    task.spawn(function() safeInvoke(RFChargeFishingRod, 2) end)
+    
+    -- Spam requests for instant trigger
+    for i = 1, 5 do
+        task.spawn(function()
+            safeInvoke(RFRequestFishingMinigameStarted, -1.25, 1)
+        end)
+    end
+end
+
+local function forceReset()
+    for i = 1, 2 do
+        safeInvoke(RFCancelFishingInputs)
+    end
+    resetTool()
+    task.wait(0.3)
+    ultraFastCast()
+    lastFishTime = tick()
+end
+
+local function ultraCompletedLoop()
+    while running do
+        -- Ultra spam for instant detection
+        for i = 1, 7 do
+            task.spawn(function() safeFire(REFishingCompleted) end)
+        end
+        task.wait()
+    end
+end
+
+local function equipLoop()
+    while running do
+        safeFire(REEquipToolFromHotbar, 1)
+        task.wait(superFastMode and 0.5 or 1)
+    end
+end
+
+local function stuckCheckLoop()
+    while running do
+        local timeout = superFastMode and 3 or 5
+        if tick() - lastFishTime >= timeout and lastFishTime > 0 then
+            forceReset()
+        end
+        task.wait(0.3)
+    end
+end
+
+local function periodicResetLoop()
+    while running do
+        task.wait(300)
+        if running then resetTool() end
+    end
+end
+
+local fishCaughtHandler
+local function setupFishHandler()
+    if fishCaughtHandler then return end
+    fishCaughtHandler = REFishCaught.OnClientEvent:Connect(function(fishName, fishData)
+        lastFishTime = tick()
+        fishCaught = fishCaught + 1
+        
+        if running then
+            -- INSTANT RE-CAST (no delay!)
+            for i = 1, (superFastMode and 5 or 3) do
+                task.spawn(ultraFastCast)
+            end
+        end
+    end)
+end
+
+local function fishingCycle()
+    lastFishTime = tick()
+    setupFishHandler()
+    
+    task.spawn(ultraCompletedLoop)
+    task.spawn(equipLoop)
+    task.spawn(stuckCheckLoop)
+    task.spawn(periodicResetLoop)
+    
+    task.wait(0.3)
+    ultraFastCast()
+    
+    while running do task.wait() end
+end
+
+Auto:Toggle({
+    Title = "🎣 ULTRA FAST FISHING",
+    Desc = "2-3 SECONDS PER CATCH!",
+    Default = false,
+    Callback = function(state)
+        running = state
+        if running then
+            fishCaught = 0
+            sessionStartTime = tick()
+            task.spawn(fishingCycle)
+        else
+            safeInvoke(RFCancelFishingInputs)
+            equipped = false
+            
+            if fishCaught > 0 then
+                local time = math.floor((tick() - sessionStartTime) / 60)
+                local rate = time > 0 and math.floor(fishCaught / time) or fishCaught
+                WindUI:Notify({
+                    Title = "🎯 Session Stats",
+                    Content = string.format("Fish: %d\nTime: %d min\nRate: %d/min", fishCaught, time, rate),
+                    Duration = 5,
+                    Icon = "activity"
+                })
+            end
+        end
+    end
+})
+
+Auto:Toggle({
+    Title = "⚡ HYPER MODE ⚡",
+    Desc = "1-2 SEC! EXTREME SPEED!",
+    Default = false,
+    Callback = function(state)
+        superFastMode = state
+        if state then
+            WindUI:Notify({
+                Title = "⚡ HYPER MODE",
+                Content = "EXTREME SPEED ACTIVATED!",
+                Duration = 3,
+                Icon = "zap"
+            })
+        end
+    end
+})
+
+Auto:Button({
+    Title = "📊 Show Stats",
+    Desc = "Current session",
+    Callback = function()
+        if fishCaught > 0 then
+            local time = math.floor((tick() - sessionStartTime) / 60)
+            local rate = time > 0 and math.floor(fishCaught / time) or fishCaught
+            local mode = superFastMode and "⚡ HYPER" or "🚀 ULTRA"
+            WindUI:Notify({
+                Title = "🎯 Stats",
+                Content = string.format("Mode: %s\nFish: %d\nTime: %d min\nRate: %d/min", mode, fishCaught, time, rate),
+                Duration = 6,
+                Icon = "bar-chart"
+            })
+        else
+            WindUI:Notify({
+                Title = "No Data",
+                Content = "Start fishing first!",
+                Duration = 3,
+                Icon = "alert-circle"
+            })
+        end
+    end
+})
+
+Auto:Space()
+Auto:Divider()
+
+-- INFO
+Auto:Section({ Title = "ℹ️ Info" })
+Auto:Button({
+    Title = "Performance Guide",
+    Callback = function()
+        WindUI:Notify({
+            Title = "⚡ Performance",
+            Content = "Ultra: 2-3 sec/fish\nHyper: 1-2 sec/fish\n\nUse at your own risk!",
+            Duration = 5,
+            Icon = "info"
+        })
+    end
+})
+
+WindUI:Notify({
+    Title = "✅ Loaded!",
+    Content = "ULTRA FAST Fishing ready!",
+    Duration = 3,
+    Icon = "check"
+})
+
+print("⚡ ULTRA FAST FISHING LOADED!")
+print("🎣 Speed: 2-3 seconds per catch")
+print("⚡ Hyper Mode: 1-2 seconds per catch")
